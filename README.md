@@ -2,6 +2,8 @@
 
 An always-on-top button that sits on the Visual Studio window and opens Claude Code in the folder of the current solution.
 
+![The Claude Code button on the Visual Studio window](http://riverfront.solutions/apps/img/CfVsClaudeSc1.png)
+
 - **Click** to open Claude Code for the solution's repository (the nearest folder with `.git`, otherwise the solution folder):
   - **Claude desktop app** (default): opens `claude://code/new?folder=<repo>`, which starts a new Code session in that folder. The app asks you to confirm the folder each time. If a desktop Code session for the repository is already running, the Claude window comes to the front instead; pick the session in its sidebar.
   - **Open most recent session for solution** (right-click toggle, on by default, desktop app only): opens the newest non-archived Code session the desktop app has recorded for the repository or a folder inside it, using `claude://code/continue?session=local_<id>`, with no folder prompt. If there isn't one, the click behaves as above. Session records are read from `%LocalAppData%\Claude-Data\claude_*\claude-code-sessions\…\local_*.json`. Both the records and this link are undocumented app internals and may change in an app update.
