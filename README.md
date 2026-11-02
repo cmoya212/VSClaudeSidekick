@@ -15,7 +15,7 @@ An always-on-top button that sits on the Visual Studio window and opens Claude C
 
 ## Notes
 
-- The overlay is not a Visual Studio extension. It uses the VS automation API to find the current solution folder, but it doesn't run inside VS. It can be used with any edition of Visual Studio 2022 or later, including Community.*
+- The overlay is not a Visual Studio extension. It uses the VS automation API to find the current solution folder, but it doesn't run inside VS. It can be used with any edition of Visual Studio 2022 or later, including Community.
 - The overlay is a single executable with no installer. It can be run from any folder, including a network share, and it doesn't write to the registry. It stores its settings in `%LocalAppData%\CfVsClaude\settings.json`.
 - The first time you run it, the overlay opens in the *bottom-right* corner of the VS window. You can move it by dragging, and it will remember its position relative to the VS window. 
 
