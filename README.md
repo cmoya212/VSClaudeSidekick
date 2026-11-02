@@ -13,6 +13,12 @@ An always-on-top button that sits on the Visual Studio window and opens Claude C
 - **Drag** to move the button. Its position is saved relative to the bottom-right corner of the VS window.
 - **Right-click** (on the button or the tray icon) for options: launch Claude Code, open the solution folder, choose a folder by hand, *Open in* (desktop app, Windows Terminal, console), open the most recent session (desktop app only), hide when VS is inactive, reset position, exit.
 
+## Notes
+
+- The overlay is not a Visual Studio extension. It uses the VS automation API to find the current solution folder, but it doesn't run inside VS. It can be used with any edition of Visual Studio 2022 or later, including Community.*
+- The overlay is a single executable with no installer. It can be run from any folder, including a network share, and it doesn't write to the registry. It stores its settings in `%LocalAppData%\CfVsClaude\settings.json`.
+- The first time you run it, the overlay opens in the *bottom-right* corner of the VS window. You can move it by dragging, and it will remember its position relative to the VS window. 
+
 ## How it works
 
 | Concern | Mechanism |
