@@ -24,4 +24,8 @@
     <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="CfVsClaude.Tests" />
+  </ItemGroup>
+
 </Project>

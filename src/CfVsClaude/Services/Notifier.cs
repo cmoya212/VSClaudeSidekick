@@ -20,5 +20,5 @@ internal sealed class Notifier(NotifyIcon tray)
         tray.ShowBalloonTip(5000, Truncate(title, 63), Truncate(message, 255), icon);
     }
 
-    private static string Truncate(string s, int max) => s.Length <= max ? s : s[..(max - 1)] + "…";
+    internal static string Truncate(string s, int max) => s.Length <= max ? s : s[..(max - 1)] + "…";
 }

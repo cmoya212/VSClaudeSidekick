@@ -150,10 +150,18 @@ internal static class SolutionLocator
         return dirs;
     }
 
-    /// <summary>Deepest folder containing all the given folders; the first one if they share none (e.g. different drives).</summary>
-    private static string? CommonDirectory(List<string> dirs)
+    /// <summary>
+    /// Deepest folder containing all the given folders; the first one if they share none (different drives,
+    /// or different UNC servers or shares).
+    /// </summary>
+    internal static string? CommonDirectory(List<string> dirs)
     {
         if (dirs.Count == 0) return null;
+
+        // UNC paths start with two empty segments, which every UNC path shares; compare roots instead.
+        string? root = Path.GetPathRoot(dirs[0]);
+        if (dirs.Any(d => !string.Equals(Path.GetPathRoot(d), root, StringComparison.OrdinalIgnoreCase)))
+            return dirs[0];
 
         string[] common = dirs[0].TrimEnd('\\').Split('\\');
         int length = common.Length;

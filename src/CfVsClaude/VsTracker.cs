@@ -37,17 +37,14 @@ internal sealed class VsTracker : IDisposable
         OnForeground(Native.GetForegroundWindow());
     }
 
-    public string SolutionName
+    public string SolutionName => Target == IntPtr.Zero ? string.Empty : ParseSolutionName(Native.GetWindowText(Target));
+
+    /// <summary>"MySolution - File.cs - Microsoft Visual Studio" / "MySolution - Microsoft Visual Studio (Administrator)"</summary>
+    internal static string ParseSolutionName(string title)
     {
-        get
-        {
-            if (Target == IntPtr.Zero) return string.Empty;
-            // "MySolution - File.cs - Microsoft Visual Studio" / "MySolution - Microsoft Visual Studio (Administrator)"
-            string title = Native.GetWindowText(Target);
-            int i = title.IndexOf(" - ", StringComparison.Ordinal);
-            string name = i > 0 ? title[..i] : title;
-            return name.StartsWith("Microsoft Visual Studio", StringComparison.Ordinal) ? string.Empty : name.Trim();
-        }
+        int i = title.IndexOf(" - ", StringComparison.Ordinal);
+        string name = i > 0 ? title[..i] : title;
+        return name.StartsWith("Microsoft Visual Studio", StringComparison.Ordinal) ? string.Empty : name.Trim();
     }
 
     public bool IsTargetDisplayable =>

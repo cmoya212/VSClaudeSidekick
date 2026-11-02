@@ -89,7 +89,7 @@ internal sealed class ClaudeLauncherService(ProcessDiscoveryService discovery, N
     /// "@src/Foo.cs " for a file inside the repository, or null. Paths containing whitespace are skipped,
     /// since an @mention ends at the first space.
     /// </summary>
-    private static string? FileMention(string repo, string? file)
+    internal static string? FileMention(string repo, string? file)
     {
         if (string.IsNullOrEmpty(file)) return null;
         string full = Path.GetFullPath(file);
@@ -199,7 +199,7 @@ internal sealed class ClaudeLauncherService(ProcessDiscoveryService discovery, N
 
     // ---------------------------------------------------------------- start info
 
-    private static ProcessStartInfo ForWindowsTerminal(string wt, string directory, string title, string windowName, string command)
+    internal static ProcessStartInfo ForWindowsTerminal(string wt, string directory, string title, string windowName, string command)
     {
         var psi = new ProcessStartInfo(wt) { UseShellExecute = false, WorkingDirectory = directory };
         // One named window per repository; a locked tab title keeps it findable while Claude Code runs.
@@ -213,7 +213,7 @@ internal sealed class ClaudeLauncherService(ProcessDiscoveryService discovery, N
         return psi;
     }
 
-    private static ProcessStartInfo ForConsole(string directory, string title, string command) =>
+    internal static ProcessStartInfo ForConsole(string directory, string title, string command) =>
         // A console program started from a GUI process without a console gets a new console window.
         new("cmd.exe")
         {
@@ -222,13 +222,13 @@ internal sealed class ClaudeLauncherService(ProcessDiscoveryService discovery, N
             Arguments = $"/k title {EscapeCmd(title)} & {command}",
         };
 
-    private static string WindowName(string repo)
+    internal static string WindowName(string repo)
     {
         byte[] hash = SHA256.HashData(Encoding.UTF8.GetBytes(repo.ToUpperInvariant()));
         return "claude-" + Convert.ToHexStringLower(hash, 0, 4);
     }
 
-    private static string EscapeCmd(string s)
+    internal static string EscapeCmd(string s)
     {
         var sb = new StringBuilder(s.Length);
         foreach (char c in s)
@@ -240,7 +240,7 @@ internal sealed class ClaudeLauncherService(ProcessDiscoveryService discovery, N
     }
 
     /// <summary>A trailing backslash would escape the closing quote when wt re-parses the argument.</summary>
-    private static string NormalizeDir(string dir)
+    internal static string NormalizeDir(string dir)
     {
         string trimmed = dir.TrimEnd('\\');
         return trimmed.EndsWith(':') ? trimmed + "\\." : trimmed;
@@ -249,7 +249,7 @@ internal sealed class ClaudeLauncherService(ProcessDiscoveryService discovery, N
     // ---------------------------------------------------------------- lookup
 
     /// <summary>The nearest folder containing .git (a directory, or a file for worktrees); else the solution folder.</summary>
-    private static string FindRepositoryRoot(string solutionDirectory)
+    internal static string FindRepositoryRoot(string solutionDirectory)
     {
         string start = ProcessDiscoveryService.NormalizeDirectory(solutionDirectory);
         for (var dir = new DirectoryInfo(start); dir is not null; dir = dir.Parent)
@@ -280,7 +280,7 @@ internal sealed class ClaudeLauncherService(ProcessDiscoveryService discovery, N
         return combined.Length > 0 ? combined : Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
     }
 
-    private static string FirstToken(string command)
+    internal static string FirstToken(string command)
     {
         if (command.StartsWith('"'))
         {
@@ -291,7 +291,7 @@ internal sealed class ClaudeLauncherService(ProcessDiscoveryService discovery, N
         return space > 0 ? command[..space] : command;
     }
 
-    private static bool IsResolvable(string executable, string path)
+    internal static bool IsResolvable(string executable, string path)
     {
         string[] extensions = (Environment.GetEnvironmentVariable("PATHEXT") ?? ".COM;.EXE;.BAT;.CMD")
             .Split(';', StringSplitOptions.RemoveEmptyEntries);

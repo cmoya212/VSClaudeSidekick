@@ -245,10 +245,12 @@ internal sealed class ProcessDiscoveryService
     public static string NormalizeDirectory(string path)
     {
         try { path = Path.GetFullPath(path); } catch { /* keep as-is */ }
-        return path.TrimEnd('\\', '/');
+        string trimmed = path.TrimEnd('\\', '/');
+        // A bare "C:" means the current directory on drive C, so a drive root keeps its backslash.
+        return trimmed.Length == 2 && trimmed[1] == ':' ? trimmed + "\\" : trimmed;
     }
 
     public static bool IsSameOrUnder(string dir, string root) =>
         dir.Equals(root, StringComparison.OrdinalIgnoreCase)
-        || dir.StartsWith(root + "\\", StringComparison.OrdinalIgnoreCase);
+        || dir.StartsWith(root.EndsWith('\\') ? root : root + "\\", StringComparison.OrdinalIgnoreCase);
 }
