@@ -26,16 +26,25 @@ An always-on-top button that sits on the Visual Studio window and opens Claude C
 
 Settings are stored in `%LocalAppData%\CfVsClaude\settings.json`. `ClaudeCommand` can be changed there (for example to `claude --continue`).
 
+## Layout
+
+```
+CfVsClaude.sln            solution (open this in Visual Studio)
+src/CfVsClaude/           the app project: CfVsClaude.csproj and its sources
+```
+
 ## Build
 
+Run these from the repository root:
+
 ```bash
-dotnet publish -c Release -o publish
+dotnet publish src/CfVsClaude -c Release -o publish
 ```
 
 This builds `publish\CfVsClaude.exe`, a self-contained single file (about 55 MB). For a much smaller exe that needs the .NET 10 Desktop Runtime installed, use:
 
 ```bash
-dotnet publish -c Release -o publish -p:SelfContained=false
+dotnet publish src/CfVsClaude -c Release -o publish -p:SelfContained=false
 ```
 
 Run only one copy at a time. A second launch exits right away.
