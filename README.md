@@ -4,12 +4,12 @@ An always-on-top button that sits on the Visual Studio window and opens Claude C
 
 - **Click** to open Claude Code for the solution's repository (the nearest folder with `.git`, otherwise the solution folder):
   - **Claude desktop app** (default): opens `claude://code/new?folder=<repo>`, which starts a new Code session in that folder. The app asks you to confirm the folder each time. If a desktop Code session for the repository is already running, the Claude window comes to the front instead; pick the session in its sidebar.
-  - **Open most recent session for solution** (right-click toggle, on by default, desktop app only): opens the newest non-archived Code session the desktop app has recorded for the repository, using `claude://code/continue?session=local_<id>`, with no folder prompt. If there isn't one, the click behaves as above. Session records are read from `%LocalAppData%\Claude-Data\claude_*\claude-code-sessions\…\local_*.json`. Both the records and this link are undocumented app internals and may change in an app update.
+  - **Open most recent session for solution** (right-click toggle, on by default, desktop app only): opens the newest non-archived Code session the desktop app has recorded for the repository or a folder inside it, using `claude://code/continue?session=local_<id>`, with no folder prompt. If there isn't one, the click behaves as above. Session records are read from `%LocalAppData%\Claude-Data\claude_*\claude-code-sessions\…\local_*.json`. Both the records and this link are undocumented app internals and may change in an app update.
   - **Windows Terminal / Console window** (right-click → *Open in*): runs the `claude` CLI. Each repository gets its own named Windows Terminal window, and a running session's window comes to the front instead of starting a new one.
   - If the desktop app isn't installed, the widget uses Windows Terminal.
 - Problems (Claude Code not on PATH, solution folder not found, start failures) show up as Windows toast notifications from the tray icon.
 - **Drag** to move the button. Its position is saved relative to the bottom-right corner of the VS window.
-- **Right-click** (on the button or the tray icon) for options: open the solution folder, choose a folder by hand, *Open in* (desktop app, Windows Terminal, console), hide when VS is inactive, reset position, exit.
+- **Right-click** (on the button or the tray icon) for options: launch Claude Code, open the solution folder, choose a folder by hand, *Open in* (desktop app, Windows Terminal, console), open the most recent session (desktop app only), hide when VS is inactive, reset position, exit.
 
 ## How it works
 
@@ -31,6 +31,7 @@ Settings are stored in `%LocalAppData%\CfVsClaude\settings.json`. `ClaudeCommand
 ```
 CfVsClaude.sln            solution (open this in Visual Studio)
 src/CfVsClaude/           the app project: CfVsClaude.csproj and its sources
+tests/CfVsClaude.Tests/   xUnit tests for the logic that doesn't need Win32 or COM
 ```
 
 ## Build
@@ -48,3 +49,11 @@ dotnet publish src/CfVsClaude -c Release -o publish -p:SelfContained=false
 ```
 
 Run only one copy at a time. A second launch exits right away.
+
+## Test
+
+```bash
+dotnet test tests/CfVsClaude.Tests
+```
+
+The tests cover path handling, repository and PATH lookup, terminal command building, and window-title parsing. Window tracking, process discovery and the VS automation lookup need a live desktop, so they are not unit-tested.
